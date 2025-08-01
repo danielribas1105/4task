@@ -1,12 +1,13 @@
-import Container from "@/components/templates/container"
 import Header from "@/components/ui/header"
+import LandingPage from "./landing/page"
+import Footer from "@/components/ui/footer"
 
 export default function Home() {
 	return (
 		<>
 			<Header />
-			<main>Content</main>
-			<footer></footer>
+			<LandingPage />
+			<Footer />
 		</>
 	)
 }
