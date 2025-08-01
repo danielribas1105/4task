@@ -4,7 +4,7 @@ import Container from "../templates/container"
 import BtnLogin from "./btn-login"
 import Logo from "./logo"
 import Menu from "./menu"
-import ModalLogin from "./modal-login"
+import ModalRegisterUser from "./modal-register-user"
 
 export default function Header() {
 	const [isModalOpen, setIsModalOpen] = useState(false)
@@ -22,7 +22,7 @@ export default function Header() {
 					</div>
 				</Container>
 			</header>
-			<ModalLogin isOpen={isModalOpen} onClose={closeModal} />
+			<ModalRegisterUser isOpen={isModalOpen} onClose={closeModal} />
 		</>
 	)
 }

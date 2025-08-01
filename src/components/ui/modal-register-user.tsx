@@ -4,13 +4,14 @@ import loginImage from "../../../public/login.png"
 import InputText from "./input-text"
 import React, { useState } from "react"
 import { IconX } from "@tabler/icons-react"
+import axios from "axios"
 
-interface ModalLoginProps {
+interface ModalRegisterUserProps {
 	isOpen: boolean
 	onClose: () => void
 }
 
-export default function ModalLogin({ isOpen, onClose }: ModalLoginProps) {
+export default function ModalRegisterUser({ isOpen, onClose }: ModalRegisterUserProps) {
 	const [name, setName] = useState("")
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
@@ -24,6 +25,36 @@ export default function ModalLogin({ isOpen, onClose }: ModalLoginProps) {
 		if (e.target === e.currentTarget) {
 			onClose()
 		}
+	}
+
+	const onSubmitForm = (evento: React.FormEvent<HTMLFormElement>) => {
+		evento.preventDefault()
+		const user = {
+			name,
+			email,
+			password,
+			address,
+			cep,
+			complement,
+		}
+
+		axios
+			.post("http://localhost:8000/public/registrar", user)
+			.then(() => {
+				alert("Usuário foi cadastrado com sucesso!")
+				setName("")
+				setEmail("")
+				setPassword("")
+				setAddress("")
+				setComplement("")
+				setCep("")
+			})
+			.catch(() => {
+				alert("OPS! Algo deu errado!")
+			})
+
+		/* console.log(user) */
+		onClose()
 	}
 
 	return (
@@ -40,7 +71,7 @@ export default function ModalLogin({ isOpen, onClose }: ModalLoginProps) {
 						<IconX />
 					</button>
 					<Image src={loginImage} alt="Figura realizar login" width={200} height={200} />
-					<form className="flex flex-col gap-3">
+					<form className="flex flex-col gap-3" onSubmit={onSubmitForm}>
 						<InputText label="Nome" type="text" placeholder="Nome" value={name} onChange={setName} />
 						<InputText
 							label="E-mail"
