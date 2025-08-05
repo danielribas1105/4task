@@ -1,15 +1,35 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Container from "../templates/container"
-import BtnLogin from "./btn-login"
+import BtnDefault from "./btn-default"
 import Logo from "./logo"
 import Menu from "./menu"
 import ModalRegisterUser from "./modal-register-user"
+import ModalLogin from "./modal-login"
+import Link from "next/link"
 
 export default function Header() {
-	const [isModalOpen, setIsModalOpen] = useState(false)
-	const openModal = () => setIsModalOpen(true)
-	const closeModal = () => setIsModalOpen(false)
+	const [isLoginOpen, setIsLoginOpen] = useState(false)
+	const [isRegisterOpen, setIsRegisterOpen] = useState(false)
+
+	let token = null
+	useEffect(() => {
+		token = sessionStorage.getItem("token")
+		setHasUserLogin(token !== null)
+	}, [])
+	const [hasUserLogin, setHasUserLogin] = useState<boolean>(token !== null)
+
+	const openModalLogin = () => setIsLoginOpen(true)
+	const openModalRegister = () => setIsRegisterOpen(true)
+	const closeModalLogin = () => {
+		setIsLoginOpen(false)
+		//setHasUserLogin(true)
+	}
+	const closeModalRegister = () => setIsRegisterOpen(false)
+	const logoutUser = () => {
+		sessionStorage.removeItem("token")
+		setHasUserLogin(false)
+	}
 
 	return (
 		<>
@@ -17,12 +37,23 @@ export default function Header() {
 				<Container className="flex justify-between items-center py-2">
 					<Logo />
 					<div className="flex gap-10 items-center">
-						<Menu />
-						<BtnLogin onClick={openModal} />
+						{!hasUserLogin ? (
+							<>
+								<Menu />
+								<BtnDefault label="Login" onClick={openModalLogin} />
+								<BtnDefault label="Cadastrar" onClick={openModalRegister} />
+							</>
+						) : (
+							<>
+								<Link href={"/account"}>Minha Conta</Link>
+								<BtnDefault label="Logout" onClick={logoutUser} />
+							</>
+						)}
 					</div>
 				</Container>
 			</header>
-			<ModalRegisterUser isOpen={isModalOpen} onClose={closeModal} />
+			<ModalLogin isOpen={isLoginOpen} onCloseLogin={closeModalLogin} />
+			<ModalRegisterUser isOpen={isRegisterOpen} onClose={closeModalRegister} />
 		</>
 	)
 }
